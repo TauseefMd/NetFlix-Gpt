@@ -7,14 +7,13 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { USER_AVATAR } from "../utils/constants";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const name = useRef(null);
@@ -49,8 +48,7 @@ const Login = () => {
 
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL:
-              "https://occ-0-1946-2186.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABaSDR-kTPhPYcVVGSsV0jC3D-Q5HZSFE6fjzAM-4cMpltx1Gw9AV7OTnL8sYnC6CBxOBZQEAJLjStt822uD2lctOvNR05qM.png?r=962",
+            photoURL: USER_AVATAR,
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -62,7 +60,6 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-              navigate("/browser");
             })
             .catch((error) => {
               setErrorMessage(error.message);
@@ -83,8 +80,6 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
-          navigate("/browser");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -112,12 +107,6 @@ const Login = () => {
           <h1 className='font-bold text-white m-2 py-4 text-4xl'>
             {isSignInForm ? "Sign In" : "Sign Up"}
           </h1>
-          <input
-            ref={email}
-            className='w-full p-4 m-2 bg-gray-800 text-white rounded'
-            type='text'
-            placeholder='Email or mobile number'
-          />
           {!isSignInForm && (
             <input
               ref={name}
@@ -126,6 +115,12 @@ const Login = () => {
               placeholder='Full Name'
             />
           )}
+          <input
+            ref={email}
+            className='w-full p-4 m-2 bg-gray-800 text-white rounded'
+            type='text'
+            placeholder='Email or mobile number'
+          />
           <input
             ref={password}
             className='w-full p-4 m-2 bg-gray-800 text-white rounded'
